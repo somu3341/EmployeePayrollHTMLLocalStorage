@@ -33,3 +33,45 @@ window.addEventListener('DOMContentLoaded',(event) => {
         }
     });
     });
+    const save=()=>{
+        try{
+            let employeeData = createEmployeePayroll();
+            createAndUpdateStorage(employeeData);
+        }
+        catch(e)
+        {
+            return e;
+        }
+    }
+    const createEmployeePayroll = () =>{
+        let employeeData = new EmployeeData();
+        try{
+            employeeData.name = getInputValueById('#name');
+        }
+        catch(e){
+            setTextValue('.text-error',e)
+            throw e;
+        }
+        employeeData.profilePic = getSelectedValues('[name=profile]').pop();
+        employeeData.gender = getSelectedValues('[name=gender]').pop();
+        employeeData.department = getSelectedValues('[name=department]');
+        employeeData.salary=getInputValueById('#salary');
+        employeeData.note=getInputValueById('#note');
+        let date =getInputValueById('#day')+" "+getInputValueById('#month')+" "+getInputValueById('#year');
+        employeeData.startdate =Date.parse(date);
+        alert(employeeData.tostring());
+        return employeeData;
+    
+    }
+    const getSelectedValues =(propertyValue)=>{
+        let allItems = document.querySelector(propertyValue);
+        let selItems=[];
+        allItems.forEach(item => {
+            if(item.checked) selItems.push(item.value);
+        });
+        return selItems;
+    }
+    const getInputValueById =(id) =>{
+        let value = document.querySelector(id).value;
+        return value;
+    }
