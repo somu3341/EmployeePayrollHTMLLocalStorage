@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded',(event) => {
     const name = document.querySelector('#name');
-    const startdate = document.querySelector('#startdate');
     const textError = document.querySelector('.text-error');
     name.addEventListener('input',function(){
         if(name.value.length == 0){
@@ -19,31 +18,20 @@ window.addEventListener('DOMContentLoaded',(event) => {
     const output=document.querySelector('.salary-output');
     output.textContent=salary.value;
     salary.addEventListener('input',function(){
-        output.textContent=salary.value;
-    
+        output.textContent=salary.value;    
     });
-    startdate.addEventListener('input',function(){
-        
+    });
+    const save = () => {
         try{
-            (new EmployeeData()).startdate=startdate.value;;
-            textError.textContent="";
-        }
-        catch (e){
-            textError.textContent=e;
-        }
-    });
-    });
-    const save=()=>{
-        try{
-            let employeeData = createEmployeePayroll();
+            let employeeData = createEmployeeData();
             createAndUpdateStorage(employeeData);
         }
         catch(e)
         {
-            return e;
+            return;
         }
     }
-    const createEmployeePayroll = () =>{
+    const createEmployeeData = () => {
         let employeeData = new EmployeeData();
         try{
             employeeData.name = getInputValueById('#name');
@@ -58,16 +46,29 @@ window.addEventListener('DOMContentLoaded',(event) => {
         employeeData.salary=getInputValueById('#salary');
         employeeData.note=getInputValueById('#note');
         let date =getInputValueById('#day')+" "+getInputValueById('#month')+" "+getInputValueById('#year');
-        employeeData.startdate =Date.parse(date);
+        employeeData.date =Date.parse(date);
         alert(employeeData.tostring());
         return employeeData;
-    
     }
+    function createAndUpdateStorage(employeeData){
+     let employeeDataList = JSON.parse(localStorage.getItem("EmployeeDataList"));
+     if(employeeDataList != undefined)
+     {
+        employeeDataList.push(employeeData);
+     }
+     else
+     {
+        employeeDataList =[employeeData];
+     }
+     alert(employeeDataList.tostring());
+     localStorage.setItem("EmployeeDataList",JSON.stringify(employeeDataList))
+    }
+    
     const getSelectedValues =(propertyValue)=>{
-        let allItems = document.querySelector(propertyValue);
+        let allItems = document.querySelectorAll(propertyValue);
         let selItems=[];
         allItems.forEach(item => {
-            if(item.checked) selItems.push(item.value);
+         selItems.push(item.value);
         });
         return selItems;
     }
